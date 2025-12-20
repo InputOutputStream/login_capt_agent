@@ -1,126 +1,202 @@
+// script.js - Updated with facial recognition workflow
+
 document.addEventListener('DOMContentLoaded', function() {
-    const loginForm = document.getElementById('loginForm');
-    const loginBtn = document.getElementById('loginBtn');
-    const statusModal = document.getElementById('statusModal');
-    const statusIcon = document.getElementById('statusIcon');
-    const statusTitle = document.getElementById('statusTitle');
-    const statusMessage = document.getElementById('statusMessage');
-    const progressBar = document.getElementById('progressBar');
-
-
- // API Configuration
+    // API Configuration
     const API_BASE_URL = 'http://localhost:5000';
 
-        // API helper functions
-        const api = {
-            async post(endpoint, data) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}${endpoint}`, {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(data)
-                    });
-                    return await response.json();
-                } catch (error) {
-                    throw new Error('Network error: ' + error.message);
-                }
-            },
-
-            async get(endpoint) {
-                try {
-                    const response = await fetch(`${API_BASE_URL}${endpoint}`);
-                    return await response.json();
-                } catch (error) {
-                    throw new Error('Network error: ' + error.message);
-                }
+    // API helper functions
+    const api = {
+        async post(endpoint, data) {
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+                return await response.json();
+            } catch (error) {
+                throw new Error('Network error: ' + error.message);
             }
+        },
+
+        async get(endpoint) {
+            try {
+                const response = await fetch(`${API_BASE_URL}${endpoint}`);
+                return await response.json();
+            } catch (error) {
+                throw new Error('Network error: ' + error.message);
+            }
+        }
+    };
+
+    // Modal functions
+    function showModal(type, title, message) {
+        const modal = document.getElementById('statusModal');
+        const icon = document.getElementById('modalIcon');
+        const titleEl = document.getElementById('modalTitle');
+        const messageEl = document.getElementById('modalMessage');
+
+        const icons = {
+            loading: '⏳',
+            success: '✅',
+            error: '❌',
+            warning: '⚠️',
+            camera: '📷'
         };
 
-        // Modal functions
-        function showModal(type, title, message) {
-            const modal = document.getElementById('statusModal');
-            const icon = document.getElementById('modalIcon');
-            const titleEl = document.getElementById('modalTitle');
-            const messageEl = document.getElementById('modalMessage');
+        icon.textContent = icons[type] || '⏳';
+        icon.className = `modal-icon ${type}`;
+        titleEl.textContent = title;
+        messageEl.textContent = message;
 
-            const icons = {
-                loading: '⏳',
-                success: '✅',
-                error: '❌'
-            };
+        modal.classList.add('show');
+    }
 
-            icon.textContent = icons[type] || '⏳';
-            icon.className = `modal-icon ${type}`;
-            titleEl.textContent = title;
-            messageEl.textContent = message;
+    function hideModal() {
+        const modal = document.getElementById('statusModal');
+        modal.classList.remove('show');
+        document.getElementById('progressFill').style.width = '0%';
+    }
 
-            modal.classList.add('show');
-        }
+    function updateProgress(percent) {
+        document.getElementById('progressFill').style.width = percent + '%';
+    }
 
-        function hideModal() {
-            const modal = document.getElementById('statusModal');
-            modal.classList.remove('show');
-            document.getElementById('progressFill').style.width = '0%';
-        }
+    // Face capture function
+    async function captureFaceForSecurity(email) {
+        try {
+            showModal('camera', 'Face Verification', 'Capturing image for security check...');
+            updateProgress(30);
 
-        function updateProgress(percent) {
-            document.getElementById('progressFill').style.width = percent + '%';
-        }
-
-        // Form submission
-        document.getElementById('loginForm').addEventListener('submit', async (e) => {
-            e.preventDefault();
-
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            // Validation
-            if (!name || !email || !password) {
-                showModal('error', 'Error', 'Please fill in all fields');
-                setTimeout(hideModal, 3000);
-                return;
+            // Check if security camera is available
+            if (!window.securityCamera) {
+                throw new Error('Security camera system not initialized');
             }
 
-            try {
-                showModal('loading', 'Authenticating', 'Verifying your credentials...');
-                updateProgress(30);
+            // Capture face
+            const result = await window.securityCamera.captureFaceForVerification(email);
+            updateProgress(70);
 
-                // Call login API
-                const result = await api.post('/login', {
-                    name: name,
-                    email: email,
-                    password: password
-                });
+            if (!result.success) {
+                throw new Error(result.error || 'Failed to capture face');
+            }
+
+            updateProgress(100);
+            return result;
+        } catch (error) {
+            console.error('Face capture error:', error);
+            throw error;
+        }
+    }
+
+    // Form submission with facial recognition
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim().toLowerCase();
+        const password = document.getElementById('password').value;
+
+        // Validation
+        if (!name || !email || !password) {
+            showModal('error', 'Error', 'Please fill in all fields');
+            setTimeout(hideModal, 3000);
+            return;
+        }
+
+        try {
+            showModal('loading', 'Authenticating', 'Verifying your credentials...');
+            updateProgress(20);
+
+            // First, check if we need to capture face
+            let faceImage = null;
+            let requireFace = false;
+
+            // Check local storage for failed attempts
+            const attemptKey = `failed_attempts_${email}`;
+            let failedAttempts = parseInt(localStorage.getItem(attemptKey)) || 0;
+
+            // If 3 or more failed attempts, capture face
+            if (failedAttempts >= 3) {
+                requireFace = true;
+                try {
+                    const faceResult = await captureFaceForSecurity(email);
+                    faceImage = faceResult.image;
+                } catch (error) {
+                    showModal('error', 'Camera Required', 
+                        'Face verification required but camera unavailable. Please enable camera access.');
+                    setTimeout(hideModal, 5000);
+                    return;
+                }
+            }
+
+            // Call login API
+            const loginData = {
+                name: name,
+                email: email,
+                password: password
+            };
+
+            // Add face image if captured
+            if (faceImage) {
+                loginData.face_image = faceImage;
+            }
+
+            const result = await api.post('/login', loginData);
+            updateProgress(80);
+
+            if (result.success) {
+                // Reset failed attempts
+                localStorage.removeItem(attemptKey);
+                updateProgress(100);
+
+                showModal('success', 'Success!', 'Login successful. Redirecting...');
+                setTimeout(() => {
+                    window.location.href = '/dashboard';
+                }, 2000);
+            } else {
+                // Increment failed attempts
+                failedAttempts++;
+                localStorage.setItem(attemptKey, failedAttempts.toString());
 
                 updateProgress(100);
 
-                if (result.success) {
-                    showModal('success', 'Success!', 'Login successful. Redirecting...');
-                    setTimeout(() => {
-                        window.location.href = '/dashboard';
-                    }, 2000);
+                if (result.locked) {
+                    showModal('error', 'Account Locked', 
+                        'Too many failed attempts. Account locked for 5 hours. Admin has been notified.');
+                    setTimeout(hideModal, 5000);
+                } else if (result.require_face) {
+                    showModal('warning', 'Security Check Required', 
+                        'Please enable camera for facial verification on next attempt.');
+                    setTimeout(hideModal, 4000);
                 } else {
-                    showModal('error', 'Login Failed', result.message || 'Invalid credentials');
+                    showModal('error', 'Login Failed', 
+                        result.message || `Invalid credentials. Attempt ${failedAttempts}/3`);
                     setTimeout(hideModal, 3000);
                 }
-            } catch (error) {
-                showModal('error', 'Error', error.message);
-                setTimeout(hideModal, 3000);
             }
-        });
-
-        // Sign up link
-        document.getElementById('signupLink').addEventListener('click', (e) => {
-            e.preventDefault();
-            showModal('loading', 'Coming Soon', 'Sign up functionality will be available soon!');
+        } catch (error) {
+            showModal('error', 'Connection Error', error.message || 'Unable to connect to server');
             setTimeout(hideModal, 3000);
-        });
+        }
+    });
 
-        // Add 3D tilt effect to card
-        const card = document.querySelector('.login-card');
+    // Sign up link
+    document.getElementById('signupLink').addEventListener('click', (e) => {
+        e.preventDefault();
+        showModal('loading', 'Registration', 'Redirecting to registration...');
+        
+        // Simulate registration page
+        setTimeout(() => {
+            window.location.href = '/register.html';
+        }, 1500);
+    });
+
+    // Add 3D tilt effect to card
+    const card = document.querySelector('.login-card');
+    if (card) {
         document.addEventListener('mousemove', (e) => {
             const xAxis = (window.innerWidth / 2 - e.pageX) / 50;
             const yAxis = (window.innerHeight / 2 - e.pageY) / 50;
@@ -130,5 +206,11 @@ document.addEventListener('DOMContentLoaded', function() {
         document.addEventListener('mouseleave', () => {
             card.style.transform = 'rotateY(0deg) rotateX(0deg)';
         });
+    }
 
+    // Initialize security camera system
+    console.log('Security system initialized');
+    if (!window.securityCamera) {
+        console.warn('Security camera system not loaded');
+    }
 });

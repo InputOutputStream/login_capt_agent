@@ -20,7 +20,7 @@ NC='\033[0m' # No Color
 print_header() {
     echo -e "${BLUE}"
     echo "╔════════════════════════════════════════╗"
-    echo "║     Góchat User Management Tool        ║"
+    echo "║     VC User Management Tool            ║"
     echo "╔════════════════════════════════════════╝"
     echo -e "${NC}"
 }

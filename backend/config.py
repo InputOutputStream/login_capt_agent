@@ -6,8 +6,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'your-secret-key-here-change-in-production'
     
     # Database
-    DATABASE_PATH = '../database/database.db'
-    
+    DATABASE_PATH = 'database/auth.db'    
     # Security
     MAX_LOGIN_ATTEMPTS = 3
     LOCKOUT_DURATION = timedelta(hours=5)
@@ -16,9 +15,9 @@ class Config:
     # Email
     SMTP_SERVER = os.environ.get('SMTP_SERVER', 'smtp.gmail.com')
     SMTP_PORT = int(os.environ.get('SMTP_PORT', 587))
-    SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'your-email@gmail.com')
-    SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', 'your-app-password')
-    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'admin@yourcompany.com')
+    SMTP_USERNAME = os.environ.get('SMTP_USERNAME', 'admin')
+    SMTP_PASSWORD = os.environ.get('SMTP_PASSWORD', '1234')
+    ADMIN_EMAIL = os.environ.get('ADMIN_EMAIL', 'arnoldhge@gmail.com')
     
     # File paths
     KNOWN_FACES_DIR = '../known_faces'
@@ -30,3 +29,4 @@ class Config:
     
     # Logging
     LOG_FILE = '../auth_system.log'
+    
