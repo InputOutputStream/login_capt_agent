@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>VC - Secure Login</title>
+</head>
+<body>
+    <!-- Background Animation -->
+    <div class="bg-animation">
+        <div class="floating-shape shape-1"></div>
+        <div class="floating-shape shape-2"></div>
+        <div class="floating-shape shape-3"></div>
+    </div>
+
+    <!-- 3D Grid Lines -->
+    <div class="grid-lines"></div>
+
+    <!-- Main Container -->
+    <div class="container">
+        <div class="login-card">
+            <!-- Logo/Title -->
+            <div class="logo">
+                <h1>Góchat</h1>
+                <p>SECURE ACCESS PORTAL</p>
+            </div>
+
+            <!-- Login Form -->
+            <form id="loginForm">
+                <!-- Name Field -->
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <div class="input-wrapper">
+                        <input type="text" id="name" name="name" placeholder="John Doe" required>
+                        <span class="input-icon">👤</span>
+                    </div>
+                </div>
+
+                <!-- Email Field -->
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <div class="input-wrapper">
+                        <input type="email" id="email" name="email" placeholder="john@example.com" required>
+                        <span class="input-icon">📧</span>
+                    </div>
+                </div>
+
+                <!-- Password Field -->
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <div class="input-wrapper">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <span class="input-icon">🔒</span>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="submit-btn">
+                    SIGN IN
+                </button>
+
+                <!-- Sign Up Link -->
+                <div class="signup-link">
+                    Don't have an account? <a href="#" id="signupLink">Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Status Modal -->
+    <div class="modal" id="statusModal">
+        <div class="modal-content">
+            <div class="modal-icon" id="modalIcon">⏳</div>
+            <div class="modal-title" id="modalTitle">Processing</div>
+            <div class="modal-message" id="modalMessage">Please wait...</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js">
+    </script>
+</body>
+</html>

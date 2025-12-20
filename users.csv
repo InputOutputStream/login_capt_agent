@@ -1,0 +1,14 @@
+name,email,password
+John Doe,john@example.com,password123
+Jane Smith,jane@example.com,secure456
+Michael Johnson,michael@example.com,mike789
+Sarah Williams,sarah@example.com,sarah2024
+David Brown,david@example.com,david456
+Emily Davis,emily@example.com,emily789
+Robert Miller,robert@example.com,robert123
+Lisa Anderson,lisa@example.com,lisa456
+James Wilson,james@example.com,james789
+Jennifer Taylor,jennifer@example.com,jenny123
+Admin User,admin@gochat.com,admin@2024
+Test User,test@gochat.com,test123
+Demo User,demo@gochat.com,demo456
