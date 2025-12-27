@@ -10,35 +10,35 @@ A production-ready authentication system featuring facial recognition, real-time
 
 ---
 
-## ✨ Features
+## Features
 
-### 🎨 **Modern UI**
+### **Modern UI**
 - Black & white liquid ice glow theme
 - Glassmorphism design with dark mode
 - Smooth animations and transitions
 - Fully responsive (desktop, tablet, mobile)
 
-### 🔐 **Security**
+### **Security**
 - Multi-factor authentication
 - Progressive face capture (after 3 failed attempts)
 - Automatic account lockout (after 6 failures)
 - Real-time threat detection
 - Email alerts to administrators
 
-### 📍 **Tracking**
+### **Tracking**
 - IP address capture
 - GPS location tracking (latitude/longitude)
 - Browser fingerprinting
 - Session management with tokens
 
-### 📊 **Dashboard**
+### **Dashboard**
 - Real-time statistics
 - Login attempt history
 - Face capture gallery
 - Security alerts
 - User management
 
-### 🚨 **Alerts**
+### **Alerts**
 - Email notifications for suspicious activity
 - Admin dashboard with unresolved alerts
 - Captured face images sent to admin
@@ -72,7 +72,6 @@ Password: password123
 
 ---
 
-## 📦 What You Get
 
 ### 🛠️ **6 Automation Scripts**
 
@@ -83,7 +82,7 @@ Password: password123
 5. **start.sh** - Start the server
 6. **test.sh** - Run automated tests
 
-### 📄 **Complete System**
+### **Complete System**
 
 ```
 vc-auth-system/
@@ -119,7 +118,7 @@ vc-auth-system/
 
 ---
 
-## 🚀 Installation
+## Installation
 
 ### Prerequisites
 
@@ -154,7 +153,7 @@ See [INSTALLATION_GUIDE.md](INSTALLATION_GUIDE.md) for detailed instructions.
 
 ---
 
-## 📖 Usage
+## Usage
 
 ### Starting the System
 
@@ -211,7 +210,7 @@ EOF
 
 ---
 
-## 🎯 How It Works
+## How It Works
 
 ### Login Flow
 
@@ -249,18 +248,18 @@ Attempt 6:    Lockout email with all photos
 ### Data Captured
 
 For each login attempt:
-- ✅ User name and email
-- ✅ Success/failure status
-- ✅ Client IP address
-- ✅ Browser user agent
-- ✅ GPS coordinates (lat/lng)
-- ✅ Timestamp
-- ✅ Face photo (on 3+ failures)
-- ✅ Face recognition confidence
+- User name and email
+- Success/failure status
+- Client IP address
+- Browser user agent
+- GPS coordinates (lat/lng)
+- Timestamp
+- Face photo (on 3+ failures)
+- Face recognition confidence
 
 ---
 
-## 🎨 Design System
+## Design System
 
 ### Color Palette
 
@@ -277,11 +276,11 @@ Warning:        #ffb74d (Orange)
 
 ### Visual Effects
 
-- 🧊 Ice glow borders and shadows
-- 💎 Glassmorphism with backdrop blur
-- ⚫ Liquid blob animations
-- 🌫️ Subtle grid overlay
-- ✨ Smooth hover transitions
+-  Ice glow borders and shadows
+-  Glassmorphism with backdrop blur
+-  Liquid blob animations
+-  Subtle grid overlay
+-  Smooth hover transitions
 
 ---
 
@@ -362,7 +361,7 @@ FACE_MATCH_THRESHOLD=0.6       # Face similarity
 
 ---
 
-## 🛠️ Scripts Reference
+## Scripts Reference
 
 | Script | Purpose | Usage |
 |--------|---------|-------|
@@ -410,12 +409,12 @@ FACE_MATCH_THRESHOLD=0.6       # Face similarity
 ```
 
 Tests:
-- ✅ Server health
-- ✅ Database connection
-- ✅ User registration
-- ✅ Login/logout
-- ✅ Session management
-- ✅ Dashboard API
+-  Server health
+-  Database connection
+-  User registration
+-  Login/logout
+-  Session management
+-  Dashboard API
 
 ### Manual Testing
 
@@ -477,8 +476,7 @@ lsof -ti:5000 | xargs kill -9
 
 ## 📚 Documentation
 
-- [Installation Guide](INSTALLATION_GUIDE.md)
-- [Scripts Summary](ALL_SCRIPTS_SUMMARY.md)
+- [Installation Guide](install.md)
 - Backend Guide (in app.py)
 - Frontend Guide (in script.js)
 
@@ -565,32 +563,4 @@ tail -f logs/app.log
 - [ ] Redis session storage
 - [ ] Docker deployment
 
----
 
-## 👏 Credits
-
-Built with:
-- Flask (Backend)
-- face_recognition (Face detection)
-- OpenCV (Image processing)
-- SQLite (Database)
-- Vanilla JS (Frontend)
-
----
-
-## 📞 Contact
-
-For questions or issues:
-- Create an issue on GitHub
-- Check documentation
-- Run automated tests
-
----
-
-**Ready to secure your system? Start now:**
-
-```bash
-./quick_start.sh
-```
-
-🎉 **Happy coding!**
