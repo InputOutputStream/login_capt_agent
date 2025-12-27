@@ -1,8 +1,9 @@
-// script.js - Updated with facial recognition workflow
-
 document.addEventListener('DOMContentLoaded', function() {
     // API Configuration
     const API_BASE_URL = 'http://localhost:5000';
+
+    // Check if already logged in
+    // checkExistingSession();
 
     // API helper functions
     const api = {
@@ -30,6 +31,15 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     };
+
+    // Check if user is already logged in
+    async function checkExistingSession() {
+        const token = localStorage.getItem('auth_token');
+        if (token) {
+            // User might already be logged in, redirect to dashboard
+            window.location.href = '/dashboard.html';
+        }
+    }
 
     // Modal functions
     function showModal(type, title, message) {
@@ -91,6 +101,42 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    // Get user's location
+    async function getUserLocation() {
+        return new Promise((resolve) => {
+            if (!navigator.geolocation) {
+                resolve({ latitude: null, longitude: null });
+                return;
+            }
+
+            navigator.geolocation.getCurrentPosition(
+                (position) => {
+                    resolve({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude
+                    });
+                },
+                (error) => {
+                    console.warn('Geolocation error:', error);
+                    resolve({ latitude: null, longitude: null });
+                },
+                { timeout: 5000 }
+            );
+        });
+    }
+
+    // Get user's IP address (backend will capture this, but we can try client-side too)
+    async function getUserIP() {
+        try {
+            const response = await fetch('https://api.ipify.org?format=json');
+            const data = await response.json();
+            return data.ip;
+        } catch (error) {
+            console.warn('Failed to get IP:', error);
+            return null;
+        }
+    }
+
     // Form submission with facial recognition
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -108,6 +154,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         try {
             showModal('loading', 'Authenticating', 'Verifying your credentials...');
+            updateProgress(10);
+
+            // Get user location and IP
+            const location = await getUserLocation();
+            const ipAddress = await getUserIP();
             updateProgress(20);
 
             // First, check if we need to capture face
@@ -136,7 +187,10 @@ document.addEventListener('DOMContentLoaded', function() {
             const loginData = {
                 name: name,
                 email: email,
-                password: password
+                password: password,
+                latitude: location.latitude,
+                longitude: location.longitude,
+                ip_address: ipAddress
             };
 
             // Add face image if captured
@@ -150,12 +204,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (result.success) {
                 // Reset failed attempts
                 localStorage.removeItem(attemptKey);
+                
+                // Store authentication token and user info
+                if (result.token) {
+                    localStorage.setItem('auth_token', result.token);
+                }
+                localStorage.setItem('user_email', email);
+                localStorage.setItem('user_name', name);
+                
                 updateProgress(100);
 
-                showModal('success', 'Success!', 'Login successful. Redirecting...');
+                showModal('success', 'Success!', 'Login successful. Redirecting to dashboard...');
                 setTimeout(() => {
-                    window.location.href = '/dashboard';
-                }, 2000);
+                    window.location.href = '/dashboard.html';
+                }, 1500);
             } else {
                 // Increment failed attempts
                 failedAttempts++;
@@ -169,30 +231,32 @@ document.addEventListener('DOMContentLoaded', function() {
                     setTimeout(hideModal, 5000);
                 } else if (result.require_face) {
                     showModal('warning', 'Security Check Required', 
-                        'Please enable camera for facial verification on next attempt.');
+                        `Failed attempt ${failedAttempts}/3. Camera verification will be required on next attempt.`);
                     setTimeout(hideModal, 4000);
                 } else {
+                    const attemptsRemaining = 3 - failedAttempts;
                     showModal('error', 'Login Failed', 
-                        result.message || `Invalid credentials. Attempt ${failedAttempts}/3`);
+                        result.message || `Invalid credentials. ${attemptsRemaining} attempts remaining before face capture.`);
                     setTimeout(hideModal, 3000);
                 }
             }
         } catch (error) {
+            updateProgress(100);
             showModal('error', 'Connection Error', error.message || 'Unable to connect to server');
             setTimeout(hideModal, 3000);
         }
     });
 
-    // Sign up link
-    document.getElementById('signupLink').addEventListener('click', (e) => {
-        e.preventDefault();
-        showModal('loading', 'Registration', 'Redirecting to registration...');
+    // // Sign up link
+    // document.getElementById('signupLink').addEventListener('click', (e) => {
+    //     e.preventDefault();
+    //     showModal('loading', 'Registration', 'Redirecting to registration...');
         
-        // Simulate registration page
-        setTimeout(() => {
-            window.location.href = '/register.html';
-        }, 1500);
-    });
+    //     // Simulate registration page
+    //     setTimeout(() => {
+    //         window.location.href = '/register.html';
+    //     }, 1500);
+    // });
 
     // Add 3D tilt effect to card
     const card = document.querySelector('.login-card');

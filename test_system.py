@@ -1,3 +1,4 @@
+# app.py - Updated with complete frontend integration
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 import traceback
@@ -125,7 +126,7 @@ def init_database():
     
     conn.commit()
     conn.close()
-    print(" Database initialized successfully")
+    print("✅ Database initialized successfully")
 
 # Helper functions
 def hash_password(password):
@@ -881,17 +882,17 @@ if __name__ == '__main__':
         print(f"Test user creation error: {e}")
     
     # Run server
-    print("\n Starting VC Authentication Server...")
-    print(f" Database: {DATABASE_PATH}")
-    print(f" Max login attempts before face capture: {MAX_LOGIN_ATTEMPTS}")
-    print(f"⏱  Lockout duration: {LOCKOUT_DURATION_HOURS} hours")
-    print(f" Admin alerts: {ADMIN_EMAIL}")
-    print("\n Server ready at http://localhost:5000")
-    print("\n Test Credentials:")
+    print("\n🚀 Starting VC Authentication Server...")
+    print(f"📁 Database: {DATABASE_PATH}")
+    print(f"🔒 Max login attempts before face capture: {MAX_LOGIN_ATTEMPTS}")
+    print(f"⏱️  Lockout duration: {LOCKOUT_DURATION_HOURS} hours")
+    print(f"📧 Admin alerts: {ADMIN_EMAIL}")
+    print("\n✨ Server ready at http://localhost:5000")
+    print("\n📝 Test Credentials:")
     print("   Name: Test User")
     print("   Email: test@example.com")
     print("   Password: password123")
-    print("\n Tips:")
+    print("\n💡 Tips:")
     print("   - Frontend: Open index.html in browser")
     print("   - Dashboard: Will show after successful login")
     print("   - Test failed attempts: Use wrong password 3+ times")

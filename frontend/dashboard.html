@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="dashboard.css">
+    <title>VC - Security Dashboard</title>
+</head>
+<body>
+    <!-- Liquid Background Effect -->
+    <div class="liquid-bg">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <!-- Ice Glow Grid -->
+    <div class="ice-grid"></div>
+
+    <!-- Main Dashboard Container -->
+    <div class="dashboard-container">
+        <!-- Header -->
+        <header class="dashboard-header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <h1 class="logo-text">VC</h1>
+                    <span class="logo-subtitle">Security Monitor</span>
+                </div>
+                <div class="header-actions">
+                    <div class="user-info" id="userInfo">
+                        <span class="user-icon">👤</span>
+                        <span class="user-name" id="userName">Loading...</span>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <span class="logout-icon">🚪</span>
+                        Logout
+                    </button>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Overview -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">📊</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="totalAttempts">0</div>
+                    <div class="stat-label">Total Attempts</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">✅</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="successAttempts">0</div>
+                    <div class="stat-label">Successful</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">❌</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="failedAttempts">0</div>
+                    <div class="stat-label">Failed</div>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon">📷</div>
+                <div class="stat-content">
+                    <div class="stat-value" id="capturedFaces">0</div>
+                    <div class="stat-label">Faces Captured</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Login Attempts Table -->
+        <div class="table-container">
+            <div class="table-header">
+                <h2>Login Attempts History</h2>
+                <button class="refresh-btn" id="refreshBtn">
+                    <span class="refresh-icon">🔄</span>
+                    Refresh
+                </button>
+            </div>
+            
+            <div class="table-wrapper">
+                <table class="attempts-table">
+                    <thead>
+                        <tr>
+                            <th>Timestamp</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>IP Address</th>
+                            <th>Location</th>
+                            <th>Face</th>
+                            <th>Details</th>
+                        </tr>
+                    </thead>
+                    <tbody id="attemptsTableBody">
+                        <!-- Dynamic content will be inserted here -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Face Preview Modal -->
+    <div class="modal" id="faceModal">
+        <div class="modal-backdrop" id="modalBackdrop"></div>
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3>Face Capture Details</h3>
+                <button class="close-btn" id="closeModal">✕</button>
+            </div>
+            <div class="modal-body">
+                <img id="faceImage" class="face-preview" alt="Captured Face">
+                <div class="face-details">
+                    <div class="detail-row">
+                        <span class="detail-label">Email:</span>
+                        <span class="detail-value" id="faceEmail"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Timestamp:</span>
+                        <span class="detail-value" id="faceTimestamp"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">IP Address:</span>
+                        <span class="detail-value" id="faceIP"></span>
+                    </div>
+                    <div class="detail-row">
+                        <span class="detail-label">Location:</span>
+                        <span class="detail-value" id="faceLocation"></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Loading...</div>
+    </div>
+
+    <script src="dashboard.js"></script>
+</body>
+</html>
